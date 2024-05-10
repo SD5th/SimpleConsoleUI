@@ -118,7 +118,7 @@ template <class T> class DynamicArray
 
     //операции
 
-        void Set(int index, T value)    //Присвоить значение по индексу
+        void Set(T value, int index)    //Присвоить значение по индексу
         {
             if (index < 0) 
                 throw IndexOutOfRange("Function 'Set': Negative index.");
