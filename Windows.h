@@ -19,10 +19,18 @@ class Shell
             WindowType,
             FunctionType
         };
+        // деконструкция
         virtual ShellType   Get_Type() = 0;
-        virtual bool        Get_IsVisible() = 0;
+        virtual bool        Get_Visibility() = 0;
+        virtual int         Get_Number() = 0;
         virtual Window*     Get_Window() = 0; 
         virtual Function*   Get_Function() = 0;
+
+        // операции
+        virtual void        Set_Visibility(bool) = 0;
+        virtual void        Set_Number(int) = 0;
+        virtual void        Set_Window(Window*) = 0; 
+        virtual void        Set_Function(Function*) = 0;
 };
 
 class WindowShell : public Shell
@@ -30,16 +38,23 @@ class WindowShell : public Shell
     private:
         Window* window;
         bool visibility;
+        int number;
     public:
         // конструкторы-деструкторы
         WindowShell(Window*, bool);
 
         // деконструкция
         ShellType   Get_Type()      override;
-        bool        Get_IsVisible() override;
+        bool        Get_Visibility() override;
+        int         Get_Number() override;
         Window*     Get_Window()    override; 
         Function*   Get_Function()  override;
 
+        // операции
+        void        Set_Visibility(bool) override;
+        void        Set_Number(int) override;
+        void        Set_Window(Window*) override; 
+        void        Set_Function(Function*) override;
 };
 
 class FunctionShell : public Shell
@@ -47,15 +62,23 @@ class FunctionShell : public Shell
     private:
         Function* function;
         bool visibility;
+        int number;
     public:
         // конструкторы-деструкторы
         FunctionShell(Function*, bool);
 
         //деконструкция
         ShellType   Get_Type()      override;
-        bool        Get_IsVisible() override;
+        bool        Get_Visibility() override;
+        int         Get_Number() override;
         Window*     Get_Window()    override; 
         Function*   Get_Function()  override;
+
+        //операции
+        void        Set_Visibility(bool) override;
+        void        Set_Number(int) override;
+        void        Set_Window(Window*) override; 
+        void        Set_Function(Function*) override;
 };
 
 
@@ -111,9 +134,13 @@ class CurrentWindow
         {
             return ShellType::WindowType;
         }
-        bool                FunctionShell::Get_IsVisible()
+        bool                FunctionShell::Get_Visibility()
         {
             return visibility;
+        }
+        int                 FunctionShell::Get_Number()
+        {
+            return number;
         }
         Window*             FunctionShell::Get_Window()
         {
@@ -123,6 +150,23 @@ class CurrentWindow
         {
             return function;
         } 
+    // операции
+        void                FunctionShell::Set_Visibility(bool newVisibility)
+        {
+            visibility = newVisibility;
+        }
+        void                FunctionShell::Set_Number(int newNumber)
+        {
+            number = newNumber;
+        }
+        void                FunctionShell::Set_Window(Window* newWindow)
+        {
+            return;
+        } 
+        void                FunctionShell::Set_Function(Function* newFunction)
+        {
+            function = newFunction;
+        }
 
 // WindowShell
     // конструкторы-деструкторы
@@ -136,9 +180,13 @@ class CurrentWindow
         {
             return ShellType::WindowType;
         }
-        bool                WindowShell::Get_IsVisible()
+        bool                WindowShell::Get_Visibility()
         {
             return visibility;
+        }
+        int                 WindowShell::Get_Number()
+        {
+            return number;
         }
         Window*             WindowShell::Get_Window()
         {
@@ -148,6 +196,23 @@ class CurrentWindow
         {
             return nullptr;
         } 
+    // операции
+        void                WindowShell::Set_Visibility(bool newVisibility)
+        {
+            visibility = newVisibility;
+        }
+        void                WindowShell::Set_Number(int newNumber)
+        {
+            number = newNumber;
+        }
+        void                WindowShell::Set_Window(Window* newWindow)
+        {
+            window = newWindow;
+        } 
+        void                WindowShell::Set_Function(Function* newFunction)
+        {
+            return;
+        }
 
 // Window
     // конструкторы-деструкторы
