@@ -78,7 +78,7 @@ template <class T> class DynamicArray
             return this->data;
         }
 
-        T Get(int index)    //Получить элемент по индексу
+        T &Get(int index)    //Получить элемент по индексу
         {
             if (this->GetSize() == 0)
                 throw IndexOutOfRange("Function 'Get': List is empty.");
@@ -86,7 +86,7 @@ template <class T> class DynamicArray
                 throw IndexOutOfRange("Function 'Get': Negative index.");
             if (index >= this->size) 
                 throw IndexOutOfRange("Function 'Get': Index is greater than size.");
-            return *(this->data + index);
+            return this->data[index];
         }
 
         DynamicArray<T>* GetSubsequence(int startIndex, int endIndex)
@@ -154,7 +154,7 @@ template <class T> class DynamicArray
             }
         }
 
-        void Insert(int index, T item)
+        void Insert(T item, int index)
         {
             if (index < 0) 
                 throw IndexOutOfRange("Function 'InsertAt': Negative index.");
@@ -210,7 +210,7 @@ template <class T> class DynamicArray
             return output; 
         }
     // перегрузка операторов
-    int &operator[] (int index) { 
+    T &operator[] (int index) { 
         if (this->GetSize() == 0)
             throw IndexOutOfRange("Operator '[]': Array is empty.");
         if (index < 0) 
