@@ -8,8 +8,8 @@ class WindowShell;
 class FunctionShell;
 
 class Window;
-class CurrentWindow;
 class Function;
+class ActiveWindow;
 
 
 class Shell
@@ -116,18 +116,53 @@ class Window
         void Change_FunctionShell(Function*, bool, int);
 };
 
-class CurrentWindow
+
+typedef void (*adapter_ptr)(DynamicArray<string>);
+class Function
+{
+    private:    
+        string functionName;
+        adapter_ptr adapter;
+
+    public:
+        // конструкторы-деструкторы
+        Function(string, adapter_ptr);  
+
+        // деконструкция
+        string Get_FunctionName();
+        adapter_ptr Get_Adapter();
+
+        // операции
+        void Set_FunctionName(string);
+        void Set_Adapter(adapter_ptr);
+        
+};
+
+
+
+
+class ActiveWindow
 {
     private:
-        Window* window;
-        Window* prevWindow; 
+        Window* currentWindow;
+        Window* previousWindow; 
+    public:
+        // конструкторы-деструкторы
+        ActiveWindow(Window* window);
+
+        // деконструкция
+        Window* Get_CurrentWindow();
+        Window* Get_PreviousWindow();
+    
+        //операции
 };
 
 // FunctionShell
     // конструкторы
         FunctionShell::FunctionShell(Function* function, bool visibility):
             function(function),
-            visibility(visibility)
+            visibility(visibility),
+            number(0)
         { }
     // деконструкция
         Shell::ShellType    FunctionShell::Get_Type() 
@@ -172,7 +207,8 @@ class CurrentWindow
     // конструкторы-деструкторы
         WindowShell::WindowShell(Window* window, bool visibility):
             window(window),
-            visibility(visibility)
+            visibility(visibility),
+            number(0)
         { }
     
     // деконструкция
@@ -288,3 +324,29 @@ class CurrentWindow
             delete shells->Get(index);
             shells->Set(new FunctionShell(function, visibility), index);
         }        
+
+// Function
+    // конструкторы-деструкторы
+        Function::Function(string functionName, adapter_ptr adapter):
+            functionName(functionName),
+            adapter(adapter)
+        { }
+
+    // декомпозиция
+        string Function::Get_FunctionName()
+        {
+            return functionName;
+        }
+        adapter_ptr Function::Get_Adapter()
+        {
+            return adapter;
+        }
+    // операции
+        void Function::Set_FunctionName(string newFunctionName)
+        {
+            functionName = newFunctionName;
+        }
+        void Function::Set_Adapter(adapter_ptr newAdapter)
+        {
+            adapter = newAdapter;
+        }
