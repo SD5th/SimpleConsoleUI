@@ -22,13 +22,11 @@ class Shell
         // деконструкция
         virtual ShellType   Get_Type() = 0;
         virtual bool        Get_Visibility() = 0;
-        virtual int         Get_Number() = 0;
         virtual Window*     Get_Window() = 0; 
         virtual Function*   Get_Function() = 0;
 
         // операции
         virtual void        Set_Visibility(bool) = 0;
-        virtual void        Set_Number(int) = 0;
         virtual void        Set_Window(Window*) = 0; 
         virtual void        Set_Function(Function*) = 0;
 };
@@ -38,7 +36,6 @@ class WindowShell : public Shell
     private:
         Window* window;
         bool visibility;
-        int number;
     public:
         // конструкторы-деструкторы
         WindowShell(Window*, bool);
@@ -46,13 +43,11 @@ class WindowShell : public Shell
         // деконструкция
         ShellType   Get_Type()      override;
         bool        Get_Visibility() override;
-        int         Get_Number() override;
         Window*     Get_Window()    override; 
         Function*   Get_Function()  override;
 
         // операции
         void        Set_Visibility(bool) override;
-        void        Set_Number(int) override;
         void        Set_Window(Window*) override; 
         void        Set_Function(Function*) override;
 };
@@ -62,7 +57,6 @@ class FunctionShell : public Shell
     private:
         Function* function;
         bool visibility;
-        int number;
     public:
         // конструкторы-деструкторы
         FunctionShell(Function*, bool);
@@ -70,16 +64,15 @@ class FunctionShell : public Shell
         //деконструкция
         ShellType   Get_Type()      override;
         bool        Get_Visibility() override;
-        int         Get_Number() override;
         Window*     Get_Window()    override; 
         Function*   Get_Function()  override;
 
         //операции
         void        Set_Visibility(bool) override;
-        void        Set_Number(int) override;
         void        Set_Window(Window*) override; 
         void        Set_Function(Function*) override;
 };
+
 
 
 class Window
@@ -88,7 +81,7 @@ class Window
         string windowName;                         // Имя окна
         string welcomeMessage;                     // Сообщение при переходе на окно
 
-        DynamicArray<Shell*>* shells;
+        DynamicArray<Shell*> shells;
 
     public:
         // конструкторы
@@ -100,7 +93,7 @@ class Window
         string                      Get_WindowName();
         string                      Get_WelcomeMessage();
 
-        DynamicArray<Shell*>*       Get_Shells();
+        DynamicArray<Shell*>       Get_Shells();
         int                         Get_Amount_Shells();
 
         // операции
@@ -115,7 +108,6 @@ class Window
         void Insert_FunctionShell(Function*, bool, int);
         void Change_FunctionShell(Function*, bool, int);
 };
-
 
 typedef void (*adapter_ptr)(DynamicArray<string>);
 class Function
@@ -139,13 +131,13 @@ class Function
 };
 
 
-
-
 class ActiveWindow
 {
     private:
         Window* currentWindow;
-        Window* previousWindow; 
+        Window* previousWindow;
+        DynamicArray<Shell*>* shells;
+
     public:
         // конструкторы-деструкторы
         ActiveWindow(Window* window);
@@ -153,16 +145,22 @@ class ActiveWindow
         // деконструкция
         Window* Get_CurrentWindow();
         Window* Get_PreviousWindow();
+        DynamicArray<Shell*>* Get_Shells();
     
         //операции
+        void MoveToWindow(Window*);
+        void PickOption(int);
+        void PrintWindow(); 
+
+         
+
 };
 
 // FunctionShell
     // конструкторы
         FunctionShell::FunctionShell(Function* function, bool visibility):
             function(function),
-            visibility(visibility),
-            number(0)
+            visibility(visibility)
         { }
     // деконструкция
         Shell::ShellType    FunctionShell::Get_Type() 
@@ -172,10 +170,6 @@ class ActiveWindow
         bool                FunctionShell::Get_Visibility()
         {
             return visibility;
-        }
-        int                 FunctionShell::Get_Number()
-        {
-            return number;
         }
         Window*             FunctionShell::Get_Window()
         {
@@ -190,10 +184,6 @@ class ActiveWindow
         {
             visibility = newVisibility;
         }
-        void                FunctionShell::Set_Number(int newNumber)
-        {
-            number = newNumber;
-        }
         void                FunctionShell::Set_Window(Window* newWindow)
         {
             return;
@@ -207,8 +197,7 @@ class ActiveWindow
     // конструкторы-деструкторы
         WindowShell::WindowShell(Window* window, bool visibility):
             window(window),
-            visibility(visibility),
-            number(0)
+            visibility(visibility)
         { }
     
     // деконструкция
@@ -219,10 +208,6 @@ class ActiveWindow
         bool                WindowShell::Get_Visibility()
         {
             return visibility;
-        }
-        int                 WindowShell::Get_Number()
-        {
-            return number;
         }
         Window*             WindowShell::Get_Window()
         {
@@ -237,10 +222,6 @@ class ActiveWindow
         {
             visibility = newVisibility;
         }
-        void                WindowShell::Set_Number(int newNumber)
-        {
-            number = newNumber;
-        }
         void                WindowShell::Set_Window(Window* newWindow)
         {
             window = newWindow;
@@ -254,19 +235,19 @@ class ActiveWindow
     // конструкторы-деструкторы
         Window::Window():
             windowName("Empty windowName"),
-            welcomeMessage("Empty welcomeMessage"),
-            shells(new DynamicArray<Shell*>)
-        { }
+            welcomeMessage("Empty welcomeMessage")
+        {
+            shells = DynamicArray<Shell*>();    
+        }
         Window::Window(string windowName, string welcomeMessage):
             windowName(windowName),
-            welcomeMessage(welcomeMessage),
-            shells(new DynamicArray<Shell*>)
-        { }
+            welcomeMessage(welcomeMessage)
+        { 
+            shells = DynamicArray<Shell*>();    
+        }
         
         Window::~Window()
-        {
-            delete shells;
-        }
+        {        }
 
     // декомпозиция
         string                          Window::Get_WindowName()
@@ -278,13 +259,13 @@ class ActiveWindow
             return welcomeMessage;
         }
         
-        DynamicArray<Shell*>*           Window::Get_Shells()
+        DynamicArray<Shell*>           Window::Get_Shells()
         {
             return shells;
         }
         int                             Window::Get_Amount_Shells()
         {
-            return shells->GetSize();
+            return shells.GetSize();
         }
 
     // операции
@@ -299,30 +280,30 @@ class ActiveWindow
 
         void Window::Append_WindowShell(Window* window, bool visibility = true)
         {
-            shells->Append(new WindowShell(window, visibility)); 
+            shells.Append(new WindowShell(window, visibility)); 
         }
         void Window::Insert_WindowShell(Window* window, bool visibility = true, int index)
         {
-            shells->Insert(new WindowShell(window, visibility), index);
+            shells.Insert(new WindowShell(window, visibility), index);
         }
         void Window::Change_WindowShell(Window* window, bool visibility = true, int index)
         {
-            delete shells->Get(index);
-            shells->Set(new WindowShell(window, visibility), index);
+            delete shells[index];
+            shells[index] = new WindowShell(window, visibility);
         }
     
         void Window::Append_FunctionShell(Function* function, bool visibility = true)
         {
-            shells->Append(new FunctionShell(function, visibility)); 
+            shells.Append(new FunctionShell(function, visibility)); 
         }
         void Window::Insert_FunctionShell(Function* function, bool visibility = true, int index)
         {
-            shells->Insert(new FunctionShell(function, visibility), index);
+            shells.Insert(new FunctionShell(function, visibility), index);
         }
         void Window::Change_FunctionShell(Function* function, bool visibility = true, int index)
         {
-            delete shells->Get(index);
-            shells->Set(new FunctionShell(function, visibility), index);
+            delete shells[index];
+            shells[index] = new FunctionShell(function, visibility);
         }        
 
 // Function
@@ -350,3 +331,26 @@ class ActiveWindow
         {
             adapter = newAdapter;
         }
+
+// ActiveWindow
+    // конструкторы-деструкторы
+        ActiveWindow::ActiveWindow(Window* window):
+            currentWindow(window),
+            previousWindow(nullptr)
+
+        { }
+
+    // деконструкция
+        Window* ActiveWindow::Get_CurrentWindow()
+        {
+            return currentWindow;
+        }
+        Window* ActiveWindow::Get_PreviousWindow()
+        {
+            return previousWindow;
+        }
+        DynamicArray<Shell*>* ActiveWindow::Get_Shells()
+        {
+            return shells;
+        }
+    // операции
