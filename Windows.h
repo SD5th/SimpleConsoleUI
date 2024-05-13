@@ -141,6 +141,10 @@ class ActiveWindow
         DynamicArray<Shell*>* Get_Shells();
     
         //операции
+        void Set_CurrentWindow(Window*);
+        void Set_PreviousWindow(Window*);
+        void Set_Shells(DynamicArray<Shell*>*);
+
         void InitializeWindow();
         void MoveToWindow(Window*);
         void PickOption(int);
@@ -311,9 +315,7 @@ class ActiveWindow
         ActiveWindow::ActiveWindow(Window* window):
             currentWindow(window),
             previousWindow(nullptr)
-        {
-
-        }
+        {  }
 
     // деконструкция
         Window* ActiveWindow::Get_CurrentWindow()
@@ -329,7 +331,21 @@ class ActiveWindow
             return shells;
         }
     // операции
-        void ActiveWindow::InitializeWindow()
+        void ActiveWindow::Set_CurrentWindow(Window* newCurrentWindow)
         {
-            
+            currentWindow = newCurrentWindow;
+        }
+        void ActiveWindow::Set_PreviousWindow(Window* newPreviousWindow)
+        {
+            previousWindow = newPreviousWindow;
+        }
+        void ActiveWindow::Set_Shells(DynamicArray<Shell*>* newShells)
+        {
+            shells = newShells;
+        }
+
+        void ActiveWindow::MoveToWindow(Window* nextWindow)
+        {
+            previousWindow = currentWindow;
+            currentWindow = nextWindow;
         }
