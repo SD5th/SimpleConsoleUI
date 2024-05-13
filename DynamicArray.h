@@ -189,6 +189,17 @@ template <class T> class DynamicArray
             }   
         }
 
+        void Delete(int index)
+        {
+            if (index < 0) 
+                throw IndexOutOfRange("Function 'Delete': Negative index.");
+            if (index >= this->size) 
+                throw IndexOutOfRange("Function 'Delete': Index is greater than size.");
+            for (int i = index; i < this->size-1; i++)
+                data[i] = data[i+1];
+            Resize(this->size-1);
+        }
+
         void Append(T item)
         {
             this->Insert(this->size, item);
