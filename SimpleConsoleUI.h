@@ -1,6 +1,7 @@
-#include <iostream>
-#include "DynamicArray.h"
+#pragma once
 
+#include <iostream>
+#include "C:\Main\Kodiki\C++\SimpleConsoleUI\DynamicArrayForUI.h"
 using namespace std;
 
 class Shell;
