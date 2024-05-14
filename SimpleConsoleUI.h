@@ -35,7 +35,6 @@ class Shell
         void        Set_Function(Function_ptr);
 };
 
-
 class Connector
 {
     private:
@@ -108,7 +107,6 @@ class ActiveShell
         {
             name = newShellName;
         }
-        
         void        Shell::Set_Connector(Connector* newShellConnector)
         {
             connector = newShellConnector;
@@ -143,7 +141,6 @@ class ActiveShell
         {
             shells = newShells;
         }
-
         void Connector::Append_Shell(Shell* shell)
         {
             shells->Append(shell); 
@@ -228,12 +225,6 @@ class ActiveShell
             string pressEnter;
             getline(cin, pressEnter);
         }
-        
-        // ┏━┓
-        // ┃ ┃
-        // ┠─┨
-        // ┗━┛
-        
         void    ActiveShell::ProcessShell()
         {
             ClearOutput();
