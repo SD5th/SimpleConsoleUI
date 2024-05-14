@@ -202,7 +202,7 @@ template <class T> class DynamicArray
 
         void Append(T item)
         {
-            this->Insert(this->size, item);
+            this->Insert(item, this->size);
         }
 
         void Prepend(T item)
