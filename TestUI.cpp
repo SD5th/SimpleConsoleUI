@@ -42,7 +42,6 @@ Shell* Exit = new Shell("Exit Window", Exit_Function, new Connector);
 
 int main()
 {
-    //SetConsoleOutputCP(CP_UTF8);
     Head->Get_Connector()->Append_Shell(WhatIsYourName);
     Head->Get_Connector()->Append_Shell(Exit);
 

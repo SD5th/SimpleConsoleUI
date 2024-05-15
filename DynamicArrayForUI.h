@@ -1,10 +1,10 @@
 #pragma once
 
 #include <iostream>
-class IndexOutOfRange : public std::exception
+class IndexOutOfRangeForUI : public std::exception
 {
     public:
-        IndexOutOfRange(const char* msg) : std::exception(){
+        IndexOutOfRangeForUI(const char* msg) : std::exception(){
             this->msg = msg;
         }
         const char* what() const noexcept override{
@@ -14,7 +14,7 @@ class IndexOutOfRange : public std::exception
         const char* msg;
 };
 
-template <class T> class DynamicArray
+template <class T> class DynamicArrayForUI
 {
     private:
         T* data;            // Элементы (ссылка на первый)
@@ -24,13 +24,13 @@ template <class T> class DynamicArray
     public:
     //конструкторы
 
-        DynamicArray(int count) :   
+        DynamicArrayForUI(int count) :   
             size(count), 
             capacity(count*2), 
             data(new T [count*2]) 
         { }
 
-        DynamicArray(T* items, int count) : 
+        DynamicArrayForUI(T* items, int count) : 
             size(count), 
             capacity(count*2), 
             data(new T [count*2])
@@ -39,7 +39,7 @@ template <class T> class DynamicArray
                 *(data + i) = *(items + i);
         }
 
-        DynamicArray(DynamicArray & dynamicArray) : 
+        DynamicArrayForUI(DynamicArrayForUI & dynamicArray) : 
             size(dynamicArray.size), 
             capacity(dynamicArray.capacity), 
             data(new T [dynamicArray.capacity])
@@ -48,7 +48,7 @@ template <class T> class DynamicArray
                 *(this->data + i) = *(dynamicArray.data + i);
         }
 
-        DynamicArray(): 
+        DynamicArrayForUI(): 
             size(0), 
             capacity(0), 
             data(nullptr)            
@@ -56,7 +56,7 @@ template <class T> class DynamicArray
 
     //деструктор
 
-        ~DynamicArray()
+        ~DynamicArrayForUI()
         {
             delete[] data; 
         }
@@ -81,24 +81,24 @@ template <class T> class DynamicArray
         T &Get(int index)    //Получить элемент по индексу
         {
             if (this->GetSize() == 0)
-                throw IndexOutOfRange("Function 'Get': List is empty.");
+                throw IndexOutOfRangeForUI("Function 'Get': List is empty.");
             if (index < 0) 
-                throw IndexOutOfRange("Function 'Get': Negative index.");
+                throw IndexOutOfRangeForUI("Function 'Get': Negative index.");
             if (index >= this->size) 
-                throw IndexOutOfRange("Function 'Get': Index is greater than size.");
+                throw IndexOutOfRangeForUI("Function 'Get': Index is greater than size.");
             return this->data[index];
         }
 
-        DynamicArray<T>* GetSubsequence(int startIndex, int endIndex)
+        DynamicArrayForUI<T>* GetSubsequence(int startIndex, int endIndex)
         {
             if (startIndex < 0)
-                throw IndexOutOfRange("Function 'GetSubsequence': Negative startIndex.");
+                throw IndexOutOfRangeForUI("Function 'GetSubsequence': Negative startIndex.");
             if (startIndex > endIndex)
-                throw IndexOutOfRange("Function 'GetSubsequence': startIndex is greater than endIndex.");
+                throw IndexOutOfRangeForUI("Function 'GetSubsequence': startIndex is greater than endIndex.");
             if (endIndex >= this->GetSize())
-                throw IndexOutOfRange("Function 'GetSubsequence': endIndex is equal or greater than size.");
+                throw IndexOutOfRangeForUI("Function 'GetSubsequence': endIndex is equal or greater than size.");
             
-            DynamicArray<T>* output = new DynamicArray<T>(endIndex - startIndex + 1);
+            DynamicArrayForUI<T>* output = new DynamicArrayForUI<T>(endIndex - startIndex + 1);
             for (int i = startIndex; i <= endIndex; i++)
             {
                 (*output).Set(i - startIndex, this->Get(i));
@@ -121,9 +121,9 @@ template <class T> class DynamicArray
         void Set(T value, int index)    //Присвоить значение по индексу
         {
             if (index < 0) 
-                throw IndexOutOfRange("Function 'Set': Negative index.");
+                throw IndexOutOfRangeForUI("Function 'Set': Negative index.");
             if (index >= this->size) 
-                throw IndexOutOfRange("Function 'Set': Index is greater than size.");
+                throw IndexOutOfRangeForUI("Function 'Set': Index is greater than size.");
             *(this->data + index) = value;
         }
 
@@ -135,7 +135,7 @@ template <class T> class DynamicArray
         void Resize(int newSize)        
         {
             if (newSize < 0)
-                throw IndexOutOfRange("Function 'Resize': Negative size.");
+                throw IndexOutOfRangeForUI("Function 'Resize': Negative size.");
             if ((this->capacity >= newSize) && (newSize >= this->capacity/4))
             {
                 this->size = newSize;
@@ -157,9 +157,9 @@ template <class T> class DynamicArray
         void Insert(T item, int index)
         {
             if (index < 0) 
-                throw IndexOutOfRange("Function 'InsertAt': Negative index.");
+                throw IndexOutOfRangeForUI("Function 'InsertAt': Negative index.");
             if (index > this->size) 
-                throw IndexOutOfRange("Function 'InsertAt': Index is greater than size.");
+                throw IndexOutOfRangeForUI("Function 'InsertAt': Index is greater than size.");
             if (this->capacity > this->size)
             {
                 T temp;
@@ -192,9 +192,9 @@ template <class T> class DynamicArray
         void Delete(int index)
         {
             if (index < 0) 
-                throw IndexOutOfRange("Function 'Delete': Negative index.");
+                throw IndexOutOfRangeForUI("Function 'Delete': Negative index.");
             if (index >= this->size) 
-                throw IndexOutOfRange("Function 'Delete': Index is greater than size.");
+                throw IndexOutOfRangeForUI("Function 'Delete': Index is greater than size.");
             for (int i = index; i < this->size-1; i++)
                 data[i] = data[i+1];
             Resize(this->size-1);
@@ -210,9 +210,9 @@ template <class T> class DynamicArray
             this->Insert(0, item);
         }
 
-        DynamicArray<T>* Concat(DynamicArray<T> & array)
+        DynamicArrayForUI<T>* Concat(DynamicArrayForUI<T> & array)
         {
-            DynamicArray<T> * output = new DynamicArray<T>(*this);
+            DynamicArrayForUI<T> * output = new DynamicArrayForUI<T>(*this);
             (*output).Resize(this->GetSize() + array.GetSize());
             for (int i = this->GetSize(); i < output->GetSize(); i++)
             {
@@ -223,11 +223,11 @@ template <class T> class DynamicArray
     // перегрузка операторов
     T &operator[] (int index) { 
         if (this->GetSize() == 0)
-            throw IndexOutOfRange("Operator '[]': Array is empty.");
+            throw IndexOutOfRangeForUI("Operator '[]': Array is empty.");
         if (index < 0) 
-            throw IndexOutOfRange("Operator '[]': Negative index.");
+            throw IndexOutOfRangeForUI("Operator '[]': Negative index.");
         if (index >= this->size) 
-            throw IndexOutOfRange("Operator '[]': Index is greater than size.");
+            throw IndexOutOfRangeForUI("Operator '[]': Index is greater than size.");
         return this->data[index];    
     }
 

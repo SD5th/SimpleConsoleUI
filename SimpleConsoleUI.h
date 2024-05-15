@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <stdlib.h>
 #include "C:\Main\Kodiki\C++\SimpleConsoleUI\DynamicArrayForUI.h"
 using namespace std;
 
@@ -39,19 +40,19 @@ class Shell
 class Connector
 {
     private:
-        DynamicArray<Shell*>* shells;
+        DynamicArrayForUI<Shell*>* shells;
 
     public:
         // конструкторы
         Connector();
-        Connector(DynamicArray<Shell*>*);
+        Connector(DynamicArrayForUI<Shell*>*);
         ~Connector();
 
         // декомпозиция
-        DynamicArray<Shell*>*       Get_Shells();
+        DynamicArrayForUI<Shell*>*       Get_Shells();
 
         // операции
-        void Set_Shells(DynamicArray<Shell*>*);
+        void Set_Shells(DynamicArrayForUI<Shell*>*);
         
         void Append_Shell(Shell*);
         void Insert_Shell(Shell*, int);
@@ -79,7 +80,7 @@ class ActiveShell
         void    StartUI();
         void    Set_Shell(Shell*);
         void    TableOutput(string&);
-        void    TableOutput(DynamicArray<string>&);
+        void    TableOutput(DynamicArrayForUI<string>&);
 };
 
 
@@ -120,9 +121,9 @@ class ActiveShell
 // Connector
     // конструкторы-деструкторы
         Connector::Connector():
-            shells(new DynamicArray<Shell*>)    
+            shells(new DynamicArrayForUI<Shell*>)    
         { }
-        Connector::Connector(DynamicArray<Shell*>* shells):
+        Connector::Connector(DynamicArrayForUI<Shell*>* shells):
             shells(shells)    
         { }
         Connector::~Connector()
@@ -133,12 +134,12 @@ class ActiveShell
 
 
     // декомпозиция
-        DynamicArray<Shell*>*   Connector::Get_Shells()
+        DynamicArrayForUI<Shell*>*   Connector::Get_Shells()
         {
             return shells;
         }
     // операции
-        void Connector::Set_Shells(DynamicArray<Shell*>* newShells)
+        void Connector::Set_Shells(DynamicArrayForUI<Shell*>* newShells)
         {
             shells = newShells;
         }
@@ -177,7 +178,8 @@ class ActiveShell
         }
         void    ActiveShell::ClearOutput()
         {
-            cout << "\033[2J\033[1;1H";
+            system("cls");                  // for windows console
+            //cout << "\033[2J\033[1;1H";     // for vsCode console
         }
         void    ActiveShell::TableOutput(string& str)
         {
@@ -189,7 +191,7 @@ class ActiveShell
             for (int i = 0; i < str.size()+2; i++) cout << "━";
             cout << "┛\n";
         }
-        void    ActiveShell::TableOutput(DynamicArray<string> &strings)
+        void    ActiveShell::TableOutput(DynamicArrayForUI<string> &strings)
         {
             int width = -1;
             for (int i = 0; i < strings.GetSize(); i++)
@@ -245,16 +247,16 @@ class ActiveShell
             }
             else if (shell->Get_Connector()->Get_Shells()->GetSize() == 1)
             {
-                DynamicArray<string> tableOutput;
-                tableOutput.Append("Current Window: " + shell->Get_Name());
-                tableOutput.Append("Next Window: " + shell->Get_Connector()->Get_Shells()->Get(0)->Get_Name());
-                TableOutput(tableOutput);
-                PressEnterToContinue();   
+                // DynamicArrayForUI<string> tableOutput;
+                // tableOutput.Append("Current Window: " + shell->Get_Name());
+                // tableOutput.Append("Next Window: " + shell->Get_Connector()->Get_Shells()->Get(0)->Get_Name());
+                // TableOutput(tableOutput);
+                // PressEnterToContinue();   
                 shell = shell->Get_Connector()->Get_Shells()->Get(0);      
             }
             else 
             {
-                DynamicArray<string> tableOutput;
+                DynamicArrayForUI<string> tableOutput;
                 tableOutput.Append("Current Window: " + shell->Get_Name());
                 for (int i = 0; i < shell->Get_Connector()->Get_Shells()->GetSize(); i++)
                     tableOutput.Append(to_string(i + 1) + ") " + shell->Get_Connector()->Get_Shells()->Get(i)->Get_Name());
